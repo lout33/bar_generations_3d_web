@@ -1,0 +1,502 @@
+[
+    {
+      "rank": 1,
+      "number": 134,
+      "img_name": "1.jpg",
+      "country": "us",
+      "title1": "@ElonMusk",
+      "title2": "134.1 M",
+      "title3": "Followers",
+      "title4": "1st Rank"
+    },
+    {
+      "rank": 2,
+      "number": 132,
+      "img_name": "2.jpg",
+      "country": "us",
+      "title1": "@BarackObama",
+      "title2": "132.9 M",
+      "title3": "Followers",
+      "title4": "2nd Rank"
+    },
+    {
+      "rank": 3,
+      "number": 113,
+      "img_name": "3.jpg",
+      "country": "ca",
+      "title1": "@justinbieber",
+      "title2": "113.2 M",
+      "title3": "Followers",
+      "title4": "3rd Rank"
+    },
+    {
+      "rank": 4,
+      "number": 108,
+      "img_name": "4.jpg",
+      "country": "us",
+      "title1": "@katyperry",
+      "title2": "108.3 M",
+      "title3": "Followers",
+      "title4": "4th Rank"
+    },
+    {
+      "rank": 5,
+      "number": 108,
+      "img_name": "5.jpg",
+      "country": "bb",
+      "title1": "@rihanna",
+      "title2": "108.23 M",
+      "title3": "Followers",
+      "title4": "5th Rank"
+    },
+    {
+      "rank": 6,
+      "number": 108,
+      "img_name": "6.jpg",
+      "country": "pt",
+      "title1": "@Cristiano",
+      "title2": "108.21 M",
+      "title3": "Followers",
+      "title4": "6th Rank"
+    },
+    {
+      "rank": 7,
+      "number": 92,
+      "img_name": "7.jpg",
+      "country": "us",
+      "title1": "@taylorswift13",
+      "title2": "92.5 M",
+      "title3": "Followers",
+      "title4": "7th Rank"
+    },
+    {
+      "rank": 8,
+      "number": 87,
+      "img_name": "8.jpg",
+      "country": "in",
+      "title1": "@narendramodi",
+      "title2": "87.5 M",
+      "title3": "Followers",
+      "title4": "8th Rank"
+    },
+    {
+      "rank": 9,
+      "number": 87,
+      "img_name": "9.jpg",
+      "country": "us",
+      "title1": "@realDonaldTrump",
+      "title2": "87.3 M",
+      "title3": "Followers",
+      "title4": "9th Rank"
+    },
+    {
+      "rank": 10,
+      "number": 84,
+      "img_name": "10.jpg",
+      "country": "us",
+      "title1": "@ladygaga",
+      "title2": "84.8 M",
+      "title3": "Followers",
+      "title4": "10th Rank"
+    },
+    {
+      "rank": 11,
+      "number": 78,
+      "img_name": "11.jpg",
+      "country": "us",
+      "title1": "@YouTube",
+      "title2": "78.8 M",
+      "title3": "Followers",
+      "title4": "11th Rank"
+    },
+    {
+      "rank": 12,
+      "number": 76,
+      "img_name": "12.jpg",
+      "country": "us",
+      "title1": "@EllenDeGeneres",
+      "title2": "76.6 M",
+      "title3": "Followers",
+      "title4": "12th Rank"
+    },
+    {
+      "rank": 13,
+      "number": 75,
+      "img_name": "13.jpg",
+      "country": "us",
+      "title1": "@KimKardashian",
+      "title2": "75.1 M",
+      "title3": "Followers",
+      "title4": "13th Rank"
+    },
+    {
+      "rank": 14,
+      "number": 71,
+      "img_name": "14.jpg",
+      "country": "us",
+      "title1": "@NASA",
+      "title2": "71.9 M",
+      "title3": "Followers",
+      "title4": "14th Rank"
+    },
+    {
+      "rank": 15,
+      "number": 67,
+      "img_name": "15.jpg",
+      "country": "us",
+      "title1": "@selenagomez",
+      "title2": "67 M",
+      "title3": "Followers",
+      "title4": "15th Rank"
+    },
+    {
+      "rank": 16,
+      "number": 65,
+      "img_name": "16.jpg",
+      "country": "us",
+      "title1": "@Twitter",
+      "title2": "65.6 M",
+      "title3": "Followers",
+      "title4": "16th Rank"
+    },
+    {
+      "rank": 17,
+      "number": 64,
+      "img_name": "17.jpg",
+      "country": "us",
+      "title1": "@cnnbrk",
+      "title2": "64.1 M",
+      "title3": "Followers",
+      "title4": "17th Rank"
+    },
+    {
+      "rank": 18,
+      "number": 62,
+      "img_name": "18.jpg",
+      "country": "us",
+      "title1": "@jtimberlake",
+      "title2": "62.5 M",
+      "title3": "Followers",
+      "title4": "18th Rank"
+    },
+    {
+      "rank": 19,
+      "number": 62,
+      "img_name": "19.jpg",
+      "country": "us",
+      "title1": "@BillGates",
+      "title2": "62.3 M",
+      "title3": "Followers",
+      "title4": "19th Rank"
+    },
+    {
+      "rank": 20,
+      "number": 61,
+      "img_name": "20.jpg",
+      "country": "br",
+      "title1": "@neymarjr",
+      "title2": "61.9 M",
+      "title3": "Followers",
+      "title4": "20th Rank"
+    },
+    {
+      "rank": 21,
+      "number": 61,
+      "img_name": "21.jpg",
+      "country": "us",
+      "title1": "@CNN",
+      "title2": "61.3 M",
+      "title3": "Followers",
+      "title4": "21st Rank"
+    },
+    {
+      "rank": 22,
+      "number": 56,
+      "img_name": "22.jpg",
+      "country": "us",
+      "title1": "@britneyspears",
+      "title2": "56 M",
+      "title3": "Followers",
+      "title4": "22nd Rank"
+    },
+    {
+      "rank": 23,
+      "number": 54,
+      "img_name": "23.jpg",
+      "country": "us",
+      "title1": "@nytimes",
+      "title2": "54.9 M",
+      "title3": "Followers",
+      "title4": "23rd Rank"
+    },
+    {
+      "rank": 24,
+      "number": 54,
+      "img_name": "24.jpg",
+      "country": "in",
+      "title1": "@imVkohli",
+      "title2": "54.6 M",
+      "title3": "Followers",
+      "title4": "24th Rank"
+    },
+    {
+      "rank": 25,
+      "number": 53,
+      "img_name": "25.jpg",
+      "country": "co",
+      "title1": "@shakira",
+      "title2": "53.8 M",
+      "title3": "Followers",
+      "title4": "25th Rank"
+    },
+    {
+      "rank": 26,
+      "number": 53,
+      "img_name": "26.jpg",
+      "country": "us",
+      "title1": "@ddlovato",
+      "title2": "53.7 M",
+      "title3": "Followers",
+      "title4": "26th Rank"
+    },
+    {
+      "rank": 27,
+      "number": 52,
+      "img_name": "27.jpg",
+      "country": "us",
+      "title1": "@KingJames",
+      "title2": "52.8 M",
+      "title3": "Followers",
+      "title4": "27th Rank"
+    },
+    {
+      "rank": 28,
+      "number": 52,
+      "img_name": "28.jpg",
+      "country": "in",
+      "title1": "@PMOIndia",
+      "title2": "52.7 M",
+      "title3": "Followers",
+      "title4": "28th Rank"
+    },
+    {
+      "rank": 29,
+      "number": 51,
+      "img_name": "29.jpg",
+      "country": "gb",
+      "title1": "@BBCBreaking",
+      "title2": "51.6 M",
+      "title3": "Followers",
+      "title4": "29th Rank"
+    },
+    {
+      "rank": 30,
+      "number": 51,
+      "img_name": "30.jpg",
+      "country": "us",
+      "title1": "@jimmyfallon",
+      "title2": "51 M",
+      "title3": "Followers",
+      "title4": "30th Rank"
+    },
+    {
+      "rank": 31,
+      "number": 48,
+      "img_name": "31.jpg",
+      "country": "in",
+      "title1": "@SrBachchan",
+      "title2": "48.4 M",
+      "title3": "Followers",
+      "title4": "31st Rank"
+    },
+    {
+      "rank": 32,
+      "number": 48,
+      "img_name": "32.jpg",
+      "country": "kr",
+      "title1": "@BTS_twt",
+      "title2": "48.2 M",
+      "title3": "Followers",
+      "title4": "32nd Rank"
+    },
+    {
+      "rank": 33,
+      "number": 47,
+      "img_name": "33.jpg",
+      "country": "eu",
+      "title1": "@ChampionsLeague",
+      "title2": "47.7 M",
+      "title3": "Followers",
+      "title4": "33rd Rank"
+    },
+    {
+      "rank": 34,
+      "number": 47,
+      "img_name": "34.jpg",
+      "country": "es",
+      "title1": "@realmadrid",
+      "title2": "47.1 M",
+      "title3": "Followers",
+      "title4": "34th Rank"
+    },
+    {
+      "rank": 35,
+      "number": 46,
+      "img_name": "35.jpg",
+      "country": "us",
+      "title1": "@MileyCyrus",
+      "title2": "46.9 M",
+      "title3": "Followers",
+      "title4": "35th Rank"
+    },
+    {
+      "rank": 36,
+      "number": 46,
+      "img_name": "36.jpg",
+      "country": "es",
+      "title1": "@FCBarcelona",
+      "title2": "46.8 M",
+      "title3": "Followers",
+      "title4": "36th Rank"
+    },
+    {
+      "rank": 37,
+      "number": 45,
+      "img_name": "37.jpg",
+      "country": "in",
+      "title1": "@akshaykumar",
+      "title2": "45.7 M",
+      "title3": "Followers",
+      "title4": "37th Rank"
+    },
+    {
+      "rank": 38,
+      "number": 45,
+      "img_name": "38.jpg",
+      "country": "us",
+      "title1": "@JLo",
+      "title2": "45.45 M",
+      "title3": "Followers",
+      "title4": "38th Rank"
+    },
+    {
+      "rank": 39,
+      "number": 45,
+      "img_name": "39.jpg",
+      "country": "us",
+      "title1": "@espn",
+      "title2": "45.44 M",
+      "title3": "Followers",
+      "title4": "39th Rank"
+    },
+    {
+      "rank": 40,
+      "number": 44,
+      "img_name": "40.jpg",
+      "country": "in",
+      "title1": "@BeingSalmanKhan",
+      "title2": "44.9 M",
+      "title3": "Followers",
+      "title4": "40th Rank"
+    },
+    {
+      "rank": 41,
+      "number": 43,
+      "img_name": "41.jpg",
+      "country": "in",
+      "title1": "@iamsrk",
+      "title2": "43.3 M",
+      "title3": "Followers",
+      "title4": "41st Rank"
+    },
+    {
+      "rank": 42,
+      "number": 43,
+      "img_name": "42.jpg",
+      "country": "us",
+      "title1": "@BrunoMars",
+      "title2": "43 M",
+      "title3": "Followers",
+      "title4": "42nd Rank"
+    },
+    {
+      "rank": 43,
+      "number": 42,
+      "img_name": "43.jpg",
+      "country": "us",
+      "title1": "@Oprah",
+      "title2": "42.9 M",
+      "title3": "Followers",
+      "title4": "43rd Rank"
+    },
+    {
+      "rank": 44,
+      "number": 42,
+      "img_name": "44.jpg",
+      "country": "kr",
+      "title1": "@bts_bighit",
+      "title2": "42.8 M",
+      "title3": "Followers",
+      "title4": "44th Rank"
+    },
+    {
+      "rank": 45,
+      "number": 42,
+      "img_name": "45.jpg",
+      "country": "us",
+      "title1": "@NBA",
+      "title2": "42.7 M",
+      "title3": "Followers",
+      "title4": "45th Rank"
+    },
+    {
+      "rank": 46,
+      "number": 41,
+      "img_name": "46.jpg",
+      "country": "us",
+      "title1": "@SportsCenter",
+      "title2": "41.5 M",
+      "title3": "Followers",
+      "title4": "46th Rank"
+    },
+    {
+      "rank": 47,
+      "number": 40,
+      "img_name": "47.jpg",
+      "country": "ie",
+      "title1": "@NiallOfficial",
+      "title2": "40.9 M",
+      "title3": "Followers",
+      "title4": "47th Rank"
+    },
+    {
+      "rank": 48,
+      "number": 40,
+      "img_name": "48.jpg",
+      "country": "us",
+      "title1": "@KylieJenner",
+      "title2": "40.4 M",
+      "title3": "Followers",
+      "title4": "48th Rank"
+    },
+    {
+      "rank": 49,
+      "number": 39,
+      "img_name": "49.jpg",
+      "country": "gb",
+      "title1": "@premierleague",
+      "title2": "39.9 M",
+      "title3": "Followers",
+      "title4": "49th Rank"
+    },
+    {
+      "rank": 50,
+      "number": 39,
+      "img_name": "50.jpg",
+      "country": "ca",
+      "title1": "@Drake",
+      "title2": "39.8 M",
+      "title3": "Followers",
+      "title4": "50th Rank"
+    }
+  ]
