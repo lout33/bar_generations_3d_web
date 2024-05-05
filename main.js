@@ -176,10 +176,16 @@ function handleCsvUpload() {
 
 	removeBarsAndImages();
 	createBarsAndImages(jsonData);
+	// isAnimating = true;
+	// animate()
 	// You can also save the JSON string to a file using fs.writeFile() if running in Node.js
 }
 
 function removeBarsAndImages() {
+
+	targetPositions = [];
+	currentTargetIndex = 0;
+
 
 	texts.forEach(text => {
         scene.remove(text); // Remove the text mesh from the scene
@@ -299,6 +305,7 @@ document.getElementById('startAnimation').addEventListener('click', function() {
 	// isAnimating = true;
 	// startCameraPosition = targetPositions[0];
 	currentTargetIndex = 0;
+	camera.position.copy(startCameraPosition);
 
 	// requestAnimationFrame(animate);
   });
@@ -340,27 +347,58 @@ playPauseButton.addEventListener('click', function() {
   }
 });
 
-document.getElementById('startRecordingAll').addEventListener('click', async function() {
-	cameraTravelProgress = 0;
-	cameraSpeed = startCameraSpeed;
-	isRecording = true;
-	
-	await startCapturing();
-	// requestAnimationFrame(animate);
+// document.getElementById('startRecordingAll').addEventListener('click', async function() {
+// 	// cameraTravelProgress = 0;
+// 	// cameraSpeed = startCameraSpeed;
+// 	isRecording = true;
+// 	currentTargetIndex = 0;
+// 	camera.position.copy(startCameraPosition);
+
+// 	await startCapturing();
+// 	// requestAnimationFrame(animate);
+// });
+
+
+// Get the recording buttons and icons
+const startStopRecordingButton = document.getElementById('startStopRecording');
+// console.log(startStopRecordingButton,"startStopRecordingButton");
+const recordIcon = startStopRecordingButton.querySelector('svg[viewBox="0 0 25 25"'); // Assuming this is the record icon
+const stopIcon = startStopRecordingButton.querySelector('svg[viewBox="0 0 132.29166 132.29167"'); // Assuming this is the stop icon
+
+// Initially hide the stop icon
+stopIcon.style. display = 'none';
+
+// Add click event listeners
+startStopRecordingButton.addEventListener('click', async function() {
+	if (isRecording) {
+		await stopCapturing();
+		stopIcon.style.display = 'none';
+		recordIcon.style.display = 'inline';
+		isRecording = false;
+		
+	}else{
+		await startCapturing();
+		recordIcon.style.display = 'none';
+		stopIcon.style.display = 'inline';
+		isRecording = true;
+		
+	}
 });
 
 
-document.getElementById('startRecording').addEventListener('click', async function() {
-	// isRecording = true;
-	await startCapturing();
-	// requestAnimationFrame(animate);
-  });
 
 
-  // startButton.addEventListener('click', startCapturing);
-document.getElementById('stopRecording').addEventListener('click',async function() {
-	await stopCapturing();
-});
+// document.getElementById('startRecording').addEventListener('click', async function() {
+// 	// isRecording = true;
+// 	await startCapturing();
+// 	// requestAnimationFrame(animate);
+//   });
+
+
+//   // startButton.addEventListener('click', startCapturing);
+// document.getElementById('stopRecording').addEventListener('click',async function() {
+// 	await stopCapturing();
+// });
 
 
 
