@@ -1,6 +1,3 @@
-import './style.css'
-import javascriptLogo from './javascript.svg'
-import viteLogo from '/vite.svg'
 
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
@@ -9,19 +6,17 @@ import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import RecordRTC from 'recordrtc';
 import dataJson from '/public/data.json';
 let dataJsonReversed = dataJson.reverse();
-console.log(dataJsonReversed);
+// console.log(dataJsonReversed);
 
 let scene, camera, renderer, controls;
-let startCameraPosition = new THREE.Vector3(-2, 2, 3);
-let endCameraPosition = new THREE.Vector3(2, 2, 3);
+
 let cameraTravelProgress = 0.0;
-let cameraSpeed = 0.001;
+let startCameraSpeed = 0.05;
+let distanceTravelCamera;
+let cameraSpeed = startCameraSpeed;
 let textureLoader = new THREE.TextureLoader();
 let canvas;
-// let capturer = new CCapture({
-//     format: 'webm', // WebM format; change to 'ffmpegserver' for MP4, but requires additional server setup
-//     framerate: 60
-// });
+
 
 let animationFrameId;
 let isRecording = false;
@@ -31,15 +26,21 @@ let canvasRecorder;
 let stoppedCameraPosition;
 let stoppedCameraTravelProgress;
 
-let imageMaterial;
+let startCameraPosition
+let endCameraPosition 
+let targetPositions = []; // Array to store target camera positions
+let currentTargetIndex = 0; // Index of the current target  bar
+
+
+
 let planes  = []; // Array to  store planes
 let textures  = []; // Array to store textures for each plane 
 let texts = [];
 let bars = [];
 let hasUploadedImgs = false; // Flag to check if images have been uploaded
 let user_textures = []; // Array to store uploaded textures
-let dataCsv = []; // uploaded csv
 
+const aspectRatio = window.innerWidth / window.innerHeight; // Assuming a 16:9 aspect ratio
 
 const loader = new FontLoader();
 
@@ -61,7 +62,11 @@ fontFiles.forEach((fontFile, index) => {
     // Check if all fonts are loaded
     if (loadedFonts.length === fontFiles.length) {
       // All fonts are loaded, create the bars and images
-      createBarsAndImages(dataJsonReversed);
+	  init(dataJsonReversed);
+	//   animate();
+    //   createBarsAndImages(dataJsonReversed);
+	//   ();
+
     }
   });
 });
@@ -113,7 +118,8 @@ function continueAnimation() {
     // Restore the camera position and progress from the stored values
     camera.position.copy(stoppedCameraPosition);
     cameraTravelProgress = stoppedCameraTravelProgress;
-    cameraSpeed = 0.001; // Reset the camera speed
+    cameraSpeed = startCameraSpeed; // Reset the camera speed
+
     animate(); // Directly call animate to resume the animation
 	// requestAnimationFrame(animate);
 
@@ -205,26 +211,12 @@ function removeBarsAndImages() {
 }
   
 
-function init() {
+function init(dataJsonReversed) {
 	isAnimating = true
 
-	imageMaterial = new THREE.MeshBasicMaterial(); // Initialize material
-
-	// Event listener for file upload 
-	document.getElementById('imageUpload').addEventListener('change', handleImageUpload);
-  
-	 // Event listener for setting the image
-	// document.getElementById('setImage').addEventListener('click', updateTexture); 
-  
-	document.getElementById('uploadCsv').addEventListener('click', handleCsvUpload);
-
-
+	
 	scene = new THREE.Scene();
 	scene.background = new THREE.Color(0xffffff); // Set background color to blue
-	const aspectRatio = window.innerWidth / window.innerHeight; // Assuming a 16:9 aspect ratio
-	camera = new THREE.PerspectiveCamera(75, aspectRatio, 0.1, 1000);
-	// camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-	camera.position.copy(startCameraPosition);
 
 	renderer = new THREE.WebGLRenderer({ antialias: true });
 	renderer.setSize(window.innerWidth, window.innerHeight);
@@ -234,8 +226,8 @@ function init() {
 	canvas = renderer.domElement;
 	
 
-	controls = new OrbitControls(camera, renderer.domElement);
-	camera.rotation.set(0, Math.PI/10, 0); // Rotate -90 degrees around the Y-axis
+
+	// controls = new OrbitControls(camera, renderer.domElement);
 
 	 // Adding lights
 	const pointLight = new THREE.PointLight(0xffffff, 1, 100);
@@ -244,43 +236,9 @@ function init() {
 	pointLight.position.set(10, 10, 10);
 	scene.add(pointLight);
 
-	// Adding a floor
-	const planeGeometry = new THREE.PlaneGeometry(100, 100);
-	const planeMaterial = new THREE.MeshLambertMaterial({ color: 0xff69b4, side: THREE.DoubleSide });
-	const plane = new THREE.Mesh(planeGeometry, planeMaterial);
-	plane.receiveShadow = true ; // Allow the plane to receive shadows
-
-	plane.rotation.x = -Math.PI / 2; // Rotate the plane to be horizontal
-	scene.add(plane);
 
 
-	// Add a vertical plane as 1
-	const backgroundGeometry = new THREE.PlaneGeometry(30, 20);
-	const loader = new THREE.TextureLoader();
-	const backgroundTexture = loader.load('/textures/city4.png');
-	const backgroundMaterial = new THREE.MeshBasicMaterial({
-		map: backgroundTexture,
-		side: THREE.DoubleSide
-	  });
 
-
-	  const background1 = new THREE.Mesh(backgroundGeometry, backgroundMaterial);
-	  background1.rotation.y = Math.PI;
-	  background1.position.set(0, 10, -3); 
-	  scene.add(background1); 
-	
-	  // Add three more backgrounds to the right 
-	  const background2 = background1.clone();  // Clone the first background
-	  background2.position.x += 30; // Shift to the right
-	  scene.add(background2);
-	
-	  const background3 = background1.clone();
-	  background3. position.x += 60;  // Shift further to the right
-	  scene.add(background3);
-	
-	  const background4 = background1.clone();
-	  background4.position.x += 90; // Shift even further to the right
-	  scene.add(background4);  
 
 
 
@@ -288,14 +246,14 @@ function init() {
 	const ambientLight = new THREE.AmbientLight(0x404040); // soft white light
 	scene.add(ambientLight);
 
-	// const axesHelper = new THREE.AxesHelper( 5 );
-	// scene.add( axesHelper );
+	const axesHelper = new THREE.AxesHelper( 5 );
+	scene.add( axesHelper );
 
-	// const gridHelper = new THREE.GridHelper(10, 10);
-	// scene.add(gridHelper);
+	const gridHelper = new THREE.GridHelper(10, 10);
+	scene.add(gridHelper);
 
-	// createBarsAndImages();
-	animate();
+	createBarsAndImages(dataJsonReversed);
+	animate()
 }
 
 async function animate() {
@@ -307,9 +265,19 @@ async function animate() {
 			requestAnimationFrame(step);
 			// if (isRecording) {
 			// }
-			if (cameraTravelProgress < 0.1) {
-				camera.position.lerpVectors(startCameraPosition, endCameraPosition, cameraTravelProgress);
-				cameraTravelProgress += cameraSpeed;
+			// if (cameraTravelProgress < distanceTravelCamera) {
+			if (currentTargetIndex < targetPositions.length) {
+
+				let targetPosition = targetPositions[currentTargetIndex];
+				// console.log(targetPosition,"targetPosition");
+				camera.position.lerp(targetPosition, cameraSpeed);
+				if (camera.position.distanceTo(targetPosition) < 0.01) { // Adjust threshold as needed
+					currentTargetIndex = (currentTargetIndex + 1) ; //  Move to next target or loop
+					// console.log(currentTargetIndex,"currentTargetIndex");
+				}
+
+				// camera.position.lerpVectors(startCameraPosition, endCameraPosition, cameraTravelProgress);
+				// cameraTravelProgress += cameraSpeed;
 			} else if (isRecording) {
 				await stopCapturing();
 				isRecording = false;
@@ -324,40 +292,61 @@ async function animate() {
 
 
 
+document.getElementById('startAnimation').addEventListener('click', function() {
+	console.log("startAnimation called"); // Debugging line
+	// cameraTravelProgress = 0;
+	// cameraSpeed = startCameraSpeed;
+	// isAnimating = true;
+	// startCameraPosition = targetPositions[0];
+	currentTargetIndex = 0;
 
-
-
+	// requestAnimationFrame(animate);
+  });
 
 
   
+// // stopButton.addEventListener('click', removeBarsAndImages);
+// document.getElementById('stopAnimation').addEventListener('click',function() {
+// 	stopAnimation()
+// });
 
-document.getElementById('startAnimation').addEventListener('click', function() {
-	cameraTravelProgress = 0;
-	cameraSpeed = 0.001;
-	isAnimating = true;
-	requestAnimationFrame(animate);
-  });
 
-// stopButton.addEventListener('click', removeBarsAndImages);
-document.getElementById('stopAnimation').addEventListener('click',function() {
-	stopAnimation()
+// // In your JavaScript file
+// const continueAnimationButton = document.getElementById('continueAnimationButton');
+// // Add an event listener for the continueAnimation button
+// continueAnimationButton.addEventListener('click', continueAnimation);
+
+
+
+// Get the single  button element
+const playPauseButton = document.getElementById('playPauseButton'); // Assuming you've changed the ID in your HTML
+const pauseIcon = playPauseButton.querySelector('svg[viewBox="0 0 320 512"]');
+const playIcon = playPauseButton.querySelector('svg[viewBox="0 0 384 512"]');
+
+// Initially hide the play icon
+playIcon.style.display = 'none';
+
+// Add a click  event listener to the button
+playPauseButton.addEventListener('click', function() {
+  if (isAnimating) {
+    stopAnimation();
+	pauseIcon.style.display = 'none';
+    playIcon.style.display =  'inline'; //
+     // Change the button's appearance to indicate "Play" (e.g., change text or icon)
+  } else {
+     continueAnimation();
+	 playIcon.style.display = 'none';
+    pauseIcon.style.display = 'inline'; 
+  }
 });
-
-
-// In your JavaScript file
-const continueAnimationButton = document.getElementById('continueAnimationButton');
-// Add an event listener for the continueAnimation button
-continueAnimationButton.addEventListener('click', continueAnimation);
-
-
 
 document.getElementById('startRecordingAll').addEventListener('click', async function() {
 	cameraTravelProgress = 0;
-	cameraSpeed = 0.001;
+	cameraSpeed = startCameraSpeed;
 	isRecording = true;
 	
 	await startCapturing();
-	requestAnimationFrame(animate);
+	// requestAnimationFrame(animate);
 });
 
 
@@ -372,6 +361,16 @@ document.getElementById('startRecording').addEventListener('click', async functi
 document.getElementById('stopRecording').addEventListener('click',async function() {
 	await stopCapturing();
 });
+
+
+
+// Event listener for file upload 
+document.getElementById('imageUpload').addEventListener('change', handleImageUpload);
+
+	// Event listener for setting the image
+// document.getElementById('setImage').addEventListener('click', updateTexture); 
+
+document.getElementById('uploadCsv').addEventListener('click', handleCsvUpload);
 
 
   
@@ -400,13 +399,62 @@ function toggleFullScreen() {
   }
 
 function createBarsAndImages(dataJsonReversed) {
-
-
 	let reverseIndex = dataJsonReversed.length;
+
+
+
+
+	// Add a vertical plane as 1
+	const backgroundGeometry = new THREE.PlaneGeometry(30, 20);
+	const loader = new THREE.TextureLoader();
+	const backgroundTexture = loader.load('/textures/city4.png');
+	const backgroundMaterial = new THREE.MeshBasicMaterial({
+		map: backgroundTexture,
+		side: THREE.DoubleSide
+		});
+
+
+	const background1 = new THREE.Mesh(backgroundGeometry, backgroundMaterial);
+	background1.rotation.y = Math.PI;
+	background1.position.set(0, 10, -3); 
+	scene.add(background1); 
+
+
+	// Adding a floor
+	const planeGeometry = new THREE.PlaneGeometry(100, 100);
+	const planeMaterial = new THREE.MeshLambertMaterial({ color: 0xff69b4, side: THREE.DoubleSide });
+	const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+	plane.receiveShadow = true ; // Allow the plane to receive shadows
+	plane.rotation.x = -Math.PI / 2; // Rotate the plane to be horizontal
+	scene.add(plane); 
+
+	
+	distanceTravelCamera = dataJsonReversed.length 
+	let startPos = 30;
+	let numBackgrounds = Math.round(reverseIndex/10)
+
+
+	for (let i = 0; i < numBackgrounds; i++) {
+		console.log("numBackgrounds",numBackgrounds);
+		// Add three more backgrounds to the right 
+		const background2 = background1.clone();  // Clone the first background
+		background2.position.x = startPos; // Shift to the right
+		scene.add(background2);
+		startPos = startPos + 30
+
+		const plane1 = plane.clone();
+		plane1.position.x = startPos; // Shift to the right
+		scene.add(plane1);
+	}
+
+
+
+
 	// const barTexture = textureLoader.load('/textures/mat3.png');
-	console.log(dataJsonReversed,"dataJsonReversed")
+	// console.log(dataJsonReversed,"dataJsonReversed")
 	dataJsonReversed.forEach((barInfo, i) => {
-		let barHeight = barInfo.number*0.10
+		let barHeight = barInfo.number*0.10;
+
 
 
 		const shape = new THREE.Shape();
@@ -438,13 +486,7 @@ function createBarsAndImages(dataJsonReversed) {
 		};
 		const barGeometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
 		barGeometry.computeVertexNormals(); // Compute vertex normals for proper shading
-		// // Adjust texture coordinates
-		// const uvAttribute = barGeometry.attributes.uv;
-		// for (let i = 0; i < uvAttribute.count; i++) {
-		// const u = uvAttribute.getX(i);
-		// const v = uvAttribute.getY(i);
-		// uvAttribute.setXY(i, u, v * barHeight / depth);
-		// }
+
 
 		 // Create a custom vertex shader to round the corners
 		 const vertexShader = `
@@ -505,7 +547,6 @@ function createBarsAndImages(dataJsonReversed) {
 		// barTexture.wrapT = THREE.RepeatWrapping;
 		// barTexture.repeat.set(1, barHeight / depth); // Adjust the texture repeat based on bar dimensions
 	
-
 		
 		// const barMaterial = new THREE.MeshBasicMaterial({ map: barTexture });
 		const bar = new THREE.Mesh(barGeometry, barMaterial);
@@ -515,11 +556,6 @@ function createBarsAndImages(dataJsonReversed) {
 		bars.push(bar);
 
 
-
-
-
-
-		
 
 		let realBarPosFrontZ = bar.position.z + 1.11
 		// Create a vertical plane next to each bar
@@ -604,6 +640,7 @@ function createBarsAndImages(dataJsonReversed) {
 			  side: THREE.DoubleSide,
 			});
 	  
+			if (title.font) {
 			const shapes = title.font.generateShapes(title.title, title.size);
 			const geometry = new THREE.ShapeGeometry(shapes);
 			geometry.computeBoundingBox();
@@ -615,21 +652,32 @@ function createBarsAndImages(dataJsonReversed) {
 	  
 			texts.push(text);
 			scene.add(text);
+			}
 		  });
 
 
-
 		reverseIndex--;
+		
+
+		let targetPosition = new THREE.Vector3(bar.position.x, barHeight-1, 3); // Adjust Y offset as needed
+		targetPositions.push(targetPosition);
+
 
 	})
+
+	startCameraPosition = targetPositions[0];
+	// endCameraPosition = new THREE.Vector3(2, 3, 3);
+
+
+	// console.log("targetPosition", targetPositions);
+	camera = new THREE.PerspectiveCamera(75, aspectRatio, 0.1, 1000);
+	// // camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+	camera.position.copy(startCameraPosition);
+
+	camera.rotation.set(0, Math.PI*2, 0); // Rotate -90 degrees around the Y-axis
+
    
 }
-
-
-
-
-init();
-
 
 
 
@@ -654,7 +702,7 @@ function handleImageUpload(event) {
 		  console.log(name,"name");
 		  user_textures.push({"name":name,"texture":texture}); // Store the loaded texture
   
-		  // If there are enough planes for the uploaded textures, update the materials
+		// If there are enough planes for the uploaded textures, update the materials
 		//    if (planes.length >= textures.length) {
 		// 	updateTexture(); 
 		//   }else{
@@ -670,14 +718,6 @@ function handleImageUpload(event) {
   }
   
 
-  function updateTexture() { 
-	// Update planes with the corresponding textures from the array
-	for ( let i = 0; i < planes.length && i < textures.length; i++) { 
-	  planes[i].material.map = textures[i];
-	  planes[i].material.needsUpdate = true; 
-	}
-  }
-  
 
 
 function RoundedRectangle( w, h, r, s ) { // width, height, radius corner, smoothness  
