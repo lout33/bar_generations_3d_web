@@ -17,7 +17,6 @@ let cameraSpeed = startCameraSpeed;
 let textureLoader = new THREE.TextureLoader();
 let canvas;
 
-
 let animationFrameId;
 let isRecording = false;
 let isAnimating = false; // Flag to check if animation is already running
@@ -32,6 +31,7 @@ let targetPositions = []; // Array to store target camera positions
 let currentTargetIndex = 0; // Index of the current target  bar
 
 
+let barHeights = []
 
 let planes  = []; // Array to  store planes
 let textures  = []; // Array to store textures for each plane 
@@ -76,14 +76,50 @@ fontFiles.forEach((fontFile, index) => {
 function startCapturing() {
 	console.log("startCapturing");
 	const rendererCanvas = renderer.domElement;
-	const stream = rendererCanvas.captureStream(60);
+	// const stream = rendererCanvas.captureStream(90);
   
-	canvasRecorder = new RecordRTC(stream, {
-	  type: 'video',
-	  disableLogs: true,
-	  mimeType: 'video/webm',
-	  numberOfAudioChannels: 2,
-	  bitrate: 1024 * 4096
+	canvasRecorder = new RecordRTC(rendererCanvas, {
+
+		type: 'canvas',  // Mandatory STRING
+   video: {
+      width: 1920,
+      height: 1280
+   },
+   canvas: {
+      width: 1920,
+      height: 1280
+   },
+   timeSlice: 10,
+
+   // used by CanvasRecorder and WhammyRecorder
+   // it is kind of a "frameRate"
+   frameInterval: 90,
+
+   // used by CanvasRecorder and WhammyRecorder
+   // you can pass {width:640, height: 480} as well
+   //video: HTMLVideoElement,
+
+   // used by WebAssemblyRecorder
+   frameRate: 90,
+   scale: 2,
+   // used by WebAssemblyRecorder
+   bitrate: 128000
+	//   type: 'canvas',
+	//   disableLogs: true,
+	//   mimeType: 'video/webm',
+	//   numberOfAudioChannels: 2,
+	//   bitrate: 1024 * 4096,
+	//   frameInterval: 90,
+	//   frameRate:90,
+	//   // only for video track
+	//   videoBitsPerSecond: 128000,
+	//   canvas: {
+	// 	// maxWidth:1920,
+	// 	// maxHeight:1080,
+	// 	width: 1920*2,
+	// 	height: 1080*2
+	// }
+
 	});
 	canvasRecorder.startRecording();
 }
@@ -173,9 +209,10 @@ function handleCsvUpload() {
 	}
   
 	console.log(jsonData);
+	dataJsonReversed = jsonData.reverse();
 
 	removeBarsAndImages();
-	createBarsAndImages(jsonData);
+	createBarsAndImages(dataJsonReversed);
 	// isAnimating = true;
 	// animate()
 	// You can also save the JSON string to a file using fs.writeFile() if running in Node.js
@@ -233,30 +270,26 @@ function init(dataJsonReversed) {
 	
 
 
-	// controls = new OrbitControls(camera, renderer.domElement);
 
-	 // Adding lights
-	const pointLight = new THREE.PointLight(0xffffff, 1, 100);
-	pointLight.castShadow = true;
+	//  Adding lights
+	// const pointLight = new THREE.PointLight(0xff9966, 100);
+	// pointLight.castShadow = true;
 
-	pointLight.position.set(10, 10, 10);
-	scene.add(pointLight);
-
+	// pointLight.position.set(0, 10, 0);
+	// scene.add(pointLight);
 
 
 
-
-
-
-
-	const ambientLight = new THREE.AmbientLight(0x404040); // soft white light
+	const ambientLight = new THREE.AmbientLight(0xff9966); // soft white light
 	scene.add(ambientLight);
 
-	const axesHelper = new THREE.AxesHelper( 5 );
-	scene.add( axesHelper );
 
-	const gridHelper = new THREE.GridHelper(10, 10);
-	scene.add(gridHelper);
+
+	// const axesHelper = new THREE.AxesHelper( 5 );
+	// scene.add( axesHelper );
+
+	// const gridHelper = new THREE.GridHelper(10, 10);
+	// scene.add(gridHelper);
 
 	createBarsAndImages(dataJsonReversed);
 	animate()
@@ -269,11 +302,9 @@ async function animate() {
 		if (isAnimating) {
 
 			requestAnimationFrame(step);
-			// if (isRecording) {
-			// }
-			// if (cameraTravelProgress < distanceTravelCamera) {
+	
+			
 			if (currentTargetIndex < targetPositions.length) {
-
 				let targetPosition = targetPositions[currentTargetIndex];
 				// console.log(targetPosition,"targetPosition");
 				camera.position.lerp(targetPosition, cameraSpeed);
@@ -281,13 +312,14 @@ async function animate() {
 					currentTargetIndex = (currentTargetIndex + 1) ; //  Move to next target or loop
 					// console.log(currentTargetIndex,"currentTargetIndex");
 				}
-
 				// camera.position.lerpVectors(startCameraPosition, endCameraPosition, cameraTravelProgress);
 				// cameraTravelProgress += cameraSpeed;
 			} else if (isRecording) {
 				await stopCapturing();
 				isRecording = false;
 			}
+
+			
 			renderer.render(scene, camera);
 		}
 	  }
@@ -298,18 +330,14 @@ async function animate() {
 
 
 
-document.getElementById('startAnimation').addEventListener('click', function() {
-	console.log("startAnimation called"); // Debugging line
-	// cameraTravelProgress = 0;
-	// cameraSpeed = startCameraSpeed;
-	// isAnimating = true;
-	// startCameraPosition = targetPositions[0];
+document.getElementById('startAnimation').addEventListener('click', handleStartAnimation);
+
+
+ function handleStartAnimation() {
+	console.log("startAnimation  called");
 	currentTargetIndex = 0;
-	camera.position.copy(startCameraPosition);
-
-	// requestAnimationFrame(animate);
-  });
-
+	camera.position.copy(startCameraPosition); 
+  }
 
   
 // // stopButton.addEventListener('click', removeBarsAndImages);
@@ -334,19 +362,20 @@ const playIcon = playPauseButton.querySelector('svg[viewBox="0 0 384 512"]');
 playIcon.style.display = 'none';
 
 // Add a click  event listener to the button
-playPauseButton.addEventListener('click', function() {
-  if (isAnimating) {
-    stopAnimation();
-	pauseIcon.style.display = 'none';
-    playIcon.style.display =  'inline'; //
-     // Change the button's appearance to indicate "Play" (e.g., change text or icon)
-  } else {
-     continueAnimation();
-	 playIcon.style.display = 'none';
-    pauseIcon.style.display = 'inline'; 
-  }
-});
+playPauseButton.addEventListener('click', handlePlayPause);
 
+
+function handlePlayPause() { 
+	if (isAnimating) {
+	  stopAnimation();
+	  pauseIcon.style.display = 'none';
+	  playIcon.style. display = 'inline';
+	} else {
+	  continueAnimation(); 
+	  playIcon.style.display = 'none';
+	  pauseIcon.style.display = 'inline';
+	}
+  }
 // document.getElementById('startRecordingAll').addEventListener('click', async function() {
 // 	// cameraTravelProgress = 0;
 // 	// cameraSpeed = startCameraSpeed;
@@ -369,24 +398,44 @@ const stopIcon = startStopRecordingButton.querySelector('svg[viewBox="0 0 132.29
 stopIcon.style. display = 'none';
 
 // Add click event listeners
-startStopRecordingButton.addEventListener('click', async function() {
-	if (isRecording) {
-		await stopCapturing();
-		stopIcon.style.display = 'none';
-		recordIcon.style.display = 'inline';
-		isRecording = false;
-		
-	}else{
-		await startCapturing();
-		recordIcon.style.display = 'none';
-		stopIcon.style.display = 'inline';
-		isRecording = true;
-		
+startStopRecordingButton.addEventListener('click', handleRecording);
+
+async function handleRecording() {
+	if ( isRecording) {
+	  await stopCapturing();
+	  stopIcon.style.display = 'none'; 
+	  recordIcon.style.display  = 'inline';
+	  isRecording = false;
+	} else {
+	  await startCapturing();
+	  recordIcon.style.display =  'none'; 
+	  stopIcon.style.display = 'inline';
+	  isRecording = true;
 	}
-});
+  }
 
 
 
+// Get the accelerate and decelerate  buttons
+const accelerateButton = document.getElementById('accelerateAnimation');
+const  decelerateButton = document.getElementById('deAccelerateAnimation');
+
+// Add event listeners for the buttons
+accelerateButton.addEventListener('click', handleAccelerate);
+
+decelerateButton.addEventListener('click', handleDecelerate);
+
+// Define named functions for   acceleration and deceleration
+function handleAccelerate() { 
+	cameraSpeed =  Math.min(cameraSpeed * 2, 1); 
+	console.log("Camera speed increased to:", cameraSpeed);
+}
+  
+function  handleDecelerate() {
+	cameraSpeed = Math.max(cameraSpeed / 2, 0.01); 
+	console. log("Camera speed decreased to:", cameraSpeed); 
+}
+  
 
 // document.getElementById('startRecording').addEventListener('click', async function() {
 // 	// isRecording = true;
@@ -400,6 +449,28 @@ startStopRecordingButton.addEventListener('click', async function() {
 // 	await stopCapturing();
 // });
 
+
+
+document.addEventListener('keydown',  function(event) {
+	console.log(event.key,"event.key");
+	switch (event.key) {
+	   case 'a': // Start animation on 'a' key press
+	   handleStartAnimation();
+		break;
+	  case 's': // Play/pause animation  on 'b' key press
+		handlePlayPause();
+		break;
+	  case 'd': // Decelerate animation on 'c' key press
+	  handleDecelerate();
+		break;
+	  case 'f': // Accelerate animation on 'd' key press 
+	  handleAccelerate();
+		break;
+	  case 'g': // Accelerate animation on 'f' key press (assuming duplicate for acceleration)
+	  	handleRecording();
+		break;
+	}
+  });
 
 
 // Event listener for file upload 
@@ -436,6 +507,61 @@ function toggleFullScreen() {
 	}
   }
 
+
+
+
+
+// Get the modal and button elements
+var modal = document.getElementById("explainModal");
+var explainButton = document.getElementById("explainButton");
+var closeButton = document.getElementsByClassName("close-button")[0];
+
+// Open the modal when the explain button is clicked
+explainButton.onclick = function() {
+modal.style.display = "block";
+}
+
+// Close the modal when the close button is clicked
+closeButton.onclick = function() {
+modal.style.display = "none";
+}
+
+// Close the modal when clicking outside of it
+window.onclick = function(event) {
+if (event.target == modal) {
+	modal.style.display = "none";
+}
+}
+
+const { createClient } = supabase;
+
+const supabaseUrl = 'YOUR_SUPABASE_URL';
+const supabaseKey = 'YOUR_SUPABASE_ANON_KEY'; 
+
+const supabase = createClient(supabaseUrl, supabaseKey);
+
+const form = document.getElementById('emailForm');
+form.addEventListener('submit', (event) => {
+  event.preventDefault(); // Prevent default form submission
+
+  const email = document.getElementById('email').value;
+
+  // Insert  email into Supabase table
+  supabase
+    .from('emails') // Replace 'emails' with your table name
+    .insert([{ email }])
+    .then(data => {
+      console.log('Email inserted:', data);
+      // Clear form or display success message
+     })
+    .catch(error => {
+      console.error('Error inserting email:', error);
+      // Display error message 
+    }); 
+}); 
+
+
+
 function createBarsAndImages(dataJsonReversed) {
 	let reverseIndex = dataJsonReversed.length;
 
@@ -443,7 +569,7 @@ function createBarsAndImages(dataJsonReversed) {
 
 
 	// Add a vertical plane as 1
-	const backgroundGeometry = new THREE.PlaneGeometry(30, 20);
+	const backgroundGeometry = new THREE.PlaneGeometry(140, 80);
 	const loader = new THREE.TextureLoader();
 	const backgroundTexture = loader.load('/textures/city4.png');
 	const backgroundMaterial = new THREE.MeshBasicMaterial({
@@ -454,13 +580,25 @@ function createBarsAndImages(dataJsonReversed) {
 
 	const background1 = new THREE.Mesh(backgroundGeometry, backgroundMaterial);
 	background1.rotation.y = Math.PI;
-	background1.position.set(0, 10, -3); 
+	background1.position.set(-20, 40, -20); 
 	scene.add(background1); 
 
 
 	// Adding a floor
-	const planeGeometry = new THREE.PlaneGeometry(100, 100);
-	const planeMaterial = new THREE.MeshLambertMaterial({ color: 0xff69b4, side: THREE.DoubleSide });
+
+	  // Load the floor texture 
+	  const floorTexture = textureLoader.load('/textures/plane3.png'); // Replace with your floor texture path
+	  floorTexture.wrapS = THREE.RepeatWrapping;
+	  floorTexture.wrapT = THREE.RepeatWrapping;
+	  floorTexture.repeat.set(10, 10); // Adjust repetition as needed
+
+	  
+	const planeGeometry = new THREE.PlaneGeometry(300, 300);
+	const planeMaterial = new  THREE.MeshLambertMaterial({ 
+		map: floorTexture, 
+		side: THREE.DoubleSide 
+	  });
+	// const planeMaterial = new THREE.MeshLambertMaterial({ color: 0xcc9900, side: THREE.DoubleSide });
 	const plane = new THREE.Mesh(planeGeometry, planeMaterial);
 	plane.receiveShadow = true ; // Allow the plane to receive shadows
 	plane.rotation.x = -Math.PI / 2; // Rotate the plane to be horizontal
@@ -468,7 +606,7 @@ function createBarsAndImages(dataJsonReversed) {
 
 	
 	distanceTravelCamera = dataJsonReversed.length 
-	let startPos = 30;
+	let startPos = 120;
 	let numBackgrounds = Math.round(reverseIndex/10)
 
 
@@ -478,7 +616,7 @@ function createBarsAndImages(dataJsonReversed) {
 		const background2 = background1.clone();  // Clone the first background
 		background2.position.x = startPos; // Shift to the right
 		scene.add(background2);
-		startPos = startPos + 30
+		startPos = startPos + 120
 
 		const plane1 = plane.clone();
 		plane1.position.x = startPos; // Shift to the right
@@ -490,9 +628,11 @@ function createBarsAndImages(dataJsonReversed) {
 
 	// const barTexture = textureLoader.load('/textures/mat3.png');
 	// console.log(dataJsonReversed,"dataJsonReversed")
+	let lastHeight;
+	let lastBarPos;
 	dataJsonReversed.forEach((barInfo, i) => {
 		let barHeight = barInfo.number*0.10;
-
+		lastHeight = barHeight;
 
 
 		const shape = new THREE.Shape();
@@ -557,7 +697,7 @@ function createBarsAndImages(dataJsonReversed) {
 			uniforms: {
 			  radius: { value: radius },
 			  size: { value: new THREE.Vector3(width / 2, height / 2, depth / 2) },
-			  colorA: { value: new THREE.Color(0xE8D4C9) }, // Blue color
+			  colorA: { value: new THREE.Color(0xdc3545) }, // Blue color
 			  colorB: { value: new THREE.Color(0x967E76) }, // Red color
 			  colorC: { value: new THREE.Color(0x452825) }  // Green color
 			// colorA: { value: new THREE.Color(0xdc3545) }, // Blue color
@@ -590,6 +730,7 @@ function createBarsAndImages(dataJsonReversed) {
 		const bar = new THREE.Mesh(barGeometry, barMaterial);
 
 		bar.position.set(i * 2 - 4, barHeight / 2, 0);
+		lastBarPos = bar.position;
 		scene.add(bar);
 		bars.push(bar);
 
@@ -598,10 +739,10 @@ function createBarsAndImages(dataJsonReversed) {
 		let realBarPosFrontZ = bar.position.z + 1.11
 		// Create a vertical plane next to each bar
 		// const planeGeometry = new THREE.PlaneGeometry(1, 1);
-		const width1 = 1;
-		const height1 = 1;
-		const radius1 = 0.2; // Adjust this value to control the roundness of the corners
-		const segments = 32; // Adjust this value for smoother curves
+		const width1 = 0.9;
+		const height1 = 0.9;
+		const radius1 = 0.1; // Adjust this value to control the roundness of the corners
+		const segments = 128; // Adjust this value for smoother curves
 
 		const roundedRectGeometry = RoundedRectangle(width1, height1, radius1, segments);
 
@@ -609,12 +750,12 @@ function createBarsAndImages(dataJsonReversed) {
 		const imageMaterial = new THREE.MeshBasicMaterial();
 
 		if (hasUploadedImgs) {
-			console.log("user_textures",user_textures);
-			console.log(barInfo.img_name,"barInfo.img_name");
+			// console.log("user_textures",user_textures);
+			// console.log(barInfo.img_name,"barInfo.img_name");
 
 			const matchingTexture = user_textures.find(textureA => textureA.name === barInfo.img_name);
 
-			console.log("matchingTexture",matchingTexture);
+			// console.log("matchingTexture",matchingTexture);
 			// matchingTexture.minFilter  = THREE.LinearFilter; // For shrinking the texture
 			// matchingTexture.magFilter = THREE.LinearFilter; // For magnifying  the texture 
 			// // OR 
@@ -622,7 +763,7 @@ function createBarsAndImages(dataJsonReversed) {
 			// matchingTexture.generateMipmaps =  true;
 
 			if(matchingTexture && matchingTexture.texture){
-				console.log(matchingTexture.texture,"matchingTexture.texture");
+				// console.log(matchingTexture.texture,"matchingTexture.texture");
 
 				imageMaterial.map = matchingTexture.texture;
 
@@ -664,10 +805,10 @@ function createBarsAndImages(dataJsonReversed) {
 
   
 		const titles = [
-		  { title: barInfo.title1, color: 0xffffff, size: 0.1, font: loadedFonts[0] },
-		  { title: barInfo.title2, color: 0xffffff, size: 0.08, font: loadedFonts[1] },
-		  { title: barInfo.title3, color: 0xffffff, size: 0.05, font: loadedFonts[2] },
-		  { title: barInfo.title4, color: 0xffffff, size: 0.1, font: loadedFonts[3] },
+		  { title: barInfo.title1, color: 0xffffff, size: 0.08,distance: 0.0, font: loadedFonts[0] },
+		  { title: barInfo.title2, color: 0xffd11a, size: 0.2,distance: 0.08, font: loadedFonts[1] },
+		  { title: barInfo.title3, color: 0xffffff, size: 0.05,distance: 0.01, font: loadedFonts[2] },
+		  { title: barInfo.title4, color: 0xffd11a, size: 0.1,distance: 0.0, font: loadedFonts[3] },
 		];
 	  
 		titles.forEach((title, index) => {
@@ -686,7 +827,7 @@ function createBarsAndImages(dataJsonReversed) {
 			geometry.translate(xMid, 0, 0);
 	  
 			const text = new THREE.Mesh(geometry, matLite);
-			text.position.set(bar.position.x, bar.position.y + (barHeight/2) - 2 + (index * 0.2), realBarPosFrontZ);
+			text.position.set(bar.position.x, bar.position.y + (barHeight/2) - 1.1 - title.distance + (index * -0.2), realBarPosFrontZ);
 	  
 			texts.push(text);
 			scene.add(text);
@@ -703,6 +844,12 @@ function createBarsAndImages(dataJsonReversed) {
 
 	})
 
+
+	// console.log("bars",bars);
+	let targetPosition = new THREE.Vector3(lastBarPos.x-3, lastHeight-4 , 8);
+	targetPositions.push(targetPosition);
+
+
 	startCameraPosition = targetPositions[0];
 	// endCameraPosition = new THREE.Vector3(2, 3, 3);
 
@@ -712,7 +859,9 @@ function createBarsAndImages(dataJsonReversed) {
 	// // camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 	camera.position.copy(startCameraPosition);
 
-	camera.rotation.set(0, Math.PI*2, 0); // Rotate -90 degrees around the Y-axis
+	camera.rotation.set(0, Math.PI*2.1, 0); // Rotate -90 degrees around the Y-axis
+
+	// controls = new OrbitControls(camera, renderer.domElement);
 
    
 }
