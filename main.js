@@ -4,7 +4,20 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import RecordRTC from 'recordrtc';
-import dataJson from '/public/data.json';
+
+
+import { createClient } from '@supabase/supabase-js'
+
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseKey = import.meta.env.VITE_SUPABASE_KEY; 
+
+console.log("supabaseUrl",supabaseUrl);
+console.log("supabaseKey",supabaseKey);
+
+const supabase = createClient(supabaseUrl, supabaseKey)
+
+
+import dataJson from '/src/data.json';
 let dataJsonReversed = dataJson.reverse();
 // console.log(dataJsonReversed);
 
@@ -76,16 +89,11 @@ fontFiles.forEach((fontFile, index) => {
 function startCapturing() {
 	console.log("startCapturing");
 	const rendererCanvas = renderer.domElement;
-	// const stream = rendererCanvas.captureStream(90);
+	const stream = rendererCanvas.captureStream(90);
   
-	canvasRecorder = new RecordRTC(rendererCanvas, {
-
-		type: 'canvas',  // Mandatory STRING
-   video: {
-      width: 1920,
-      height: 1280
-   },
-   canvas: {
+	canvasRecorder = new RecordRTC(stream, {
+	type: 'video',  // Mandatory STRING
+    video: {
       width: 1920,
       height: 1280
    },
@@ -418,7 +426,7 @@ async function handleRecording() {
 
 // Get the accelerate and decelerate  buttons
 const accelerateButton = document.getElementById('accelerateAnimation');
-const  decelerateButton = document.getElementById('deAccelerateAnimation');
+const decelerateButton = document.getElementById('deAccelerateAnimation');
 
 // Add event listeners for the buttons
 accelerateButton.addEventListener('click', handleAccelerate);
@@ -436,6 +444,7 @@ function  handleDecelerate() {
 	console. log("Camera speed decreased to:", cameraSpeed); 
 }
   
+
 
 // document.getElementById('startRecording').addEventListener('click', async function() {
 // 	// isRecording = true;
@@ -479,10 +488,80 @@ document.getElementById('imageUpload').addEventListener('change', handleImageUpl
 	// Event listener for setting the image
 // document.getElementById('setImage').addEventListener('click', updateTexture); 
 
-document.getElementById('uploadCsv').addEventListener('click', handleCsvUpload);
+// document.getElementById('uploadCsv').addEventListener('click', handleCsvUpload);
+
 
 
   
+
+  
+
+
+// Get the modal and button elements
+var modal = document.getElementById("explainModal");
+var explainButton = document.getElementById("explainButton");
+var closeButton = document.getElementById("closeButtonContent");
+
+// Open the modal when the explain button is clicked
+explainButton.onclick = function() {
+modal.style.display = "block";
+}
+
+// Close the modal when the close button is clicked
+closeButton.onclick = function() {
+modal.style.display = "none";
+}
+
+// Close the modal when clicking outside of it
+window.onclick = function(event) {
+if (event.target == modal) {
+	modal.style.display = "none";
+}
+}
+
+
+var formModal = document.getElementById("formModal");
+var closeFormButton = document.getElementById("close-button-form");
+const applyChangesButton = document.getElementById('applyChanges');
+
+applyChangesButton.addEventListener('click', function() {
+   // Open the modal
+   console.log("applyChangesButton");
+   formModal.style.display = 'block';
+}); 
+
+
+// Open the modal when the explain button is clicked
+closeFormButton.onclick = function() {
+	formModal.style.display = "none";
+}
+
+
+
+const form = document.getElementById('emailForm');
+form.addEventListener('submit', (event) => {
+  event.preventDefault(); // Prevent default form submission
+
+  const email = document.getElementById('email').value;
+
+  // Insert  email into Supabase table
+  supabase
+    .from('emails') // Replace 'emails' with your table name
+    .insert([{ email }])
+    .then(data => {
+      console.log('Email inserted:', data);
+      // Clear form or display success message
+     })
+    .catch(error => {
+      console.error('Error inserting email:', error);
+      // Display error message 
+    }); 
+
+	handleCsvUpload();
+}); 
+
+
+
 // In your main.js file
 const fullscreenButton  = document.getElementById('fullscreenButton');
 fullscreenButton.addEventListener('click', toggleFullScreen); 
@@ -506,60 +585,6 @@ function toggleFullScreen() {
 	  }
 	}
   }
-
-
-
-
-
-// Get the modal and button elements
-var modal = document.getElementById("explainModal");
-var explainButton = document.getElementById("explainButton");
-var closeButton = document.getElementsByClassName("close-button")[0];
-
-// Open the modal when the explain button is clicked
-explainButton.onclick = function() {
-modal.style.display = "block";
-}
-
-// Close the modal when the close button is clicked
-closeButton.onclick = function() {
-modal.style.display = "none";
-}
-
-// Close the modal when clicking outside of it
-window.onclick = function(event) {
-if (event.target == modal) {
-	modal.style.display = "none";
-}
-}
-
-const { createClient } = supabase;
-
-const supabaseUrl = 'YOUR_SUPABASE_URL';
-const supabaseKey = 'YOUR_SUPABASE_ANON_KEY'; 
-
-const supabase = createClient(supabaseUrl, supabaseKey);
-
-const form = document.getElementById('emailForm');
-form.addEventListener('submit', (event) => {
-  event.preventDefault(); // Prevent default form submission
-
-  const email = document.getElementById('email').value;
-
-  // Insert  email into Supabase table
-  supabase
-    .from('emails') // Replace 'emails' with your table name
-    .insert([{ email }])
-    .then(data => {
-      console.log('Email inserted:', data);
-      // Clear form or display success message
-     })
-    .catch(error => {
-      console.error('Error inserting email:', error);
-      // Display error message 
-    }); 
-}); 
-
 
 
 function createBarsAndImages(dataJsonReversed) {
@@ -974,6 +999,8 @@ function RoundedRectangle( w, h, r, s ) { // width, height, radius corner, smoot
 	return geometry;
 	
 }
+
+
 
 
 

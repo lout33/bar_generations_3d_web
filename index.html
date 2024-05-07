@@ -118,8 +118,7 @@
 
 
 </style>
-  <script src="https://unpkg.com/@supabase/supabase-js"></script>
-  <script src="https://www.webrtc-experiment.com/screenshot.js"></script>
+  <!-- <script src="https://www.webrtc-experiment.com/screenshot.js"></script> -->
   </head>
   <body>
     <main>
@@ -138,7 +137,6 @@
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
               <path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg>
         </button> <!-- Initial text can be "Pause" or "Play" depending on your preference -->
-
 
       
 
@@ -174,7 +172,7 @@
         <label for="csvUpload">CSV:</label>
         <input type="file" id="csvUpload" accept=".csv">
 
-        <button id="uploadCsv">Apply Changes</button>
+        <button id="applyChanges">Apply Changes</button>
       </div>
 
       <div>
@@ -193,7 +191,7 @@
 
   <div id="explainModal" class="modal">
     <div class="modal-content">
-      <span class="close-button">&times;</span>
+      <span class="close-button" id="closeButtonContent">&times;</span>
       <h2>Explanation of the Visualization</h2>
       <p>Aca puedes crear videos de comparaciones, solo sube tus fotos y tu info en un csv en este formato</p>
       <p>Our previus project was a Blender Addon, but was a litle bit complicate to use, so we decided to make a web version of it.</p>
@@ -213,12 +211,21 @@
       <li><b>G</b>: Start/stop recording</li>
       </ul> 
 
-    <form id="emailForm"> 
-      <input type="email" id="email" placeholder="Your Email" required>
-      <button type="submit">Submit</button> 
-    </form>
+   
     </div>
   </div> 
+
+  <div id="formModal" class="modal"> 
+    <div class="modal-content"> 
+      <span class="close-button" id="close-button-form">&times;</span> 
+
+      <h3>Give us your mail before uploading your content:</h3>
+      <form id="emailForm">
+        <input type="email" id="email" placeholder="Your Email" required>
+        <button type="submit">Submit</button> 
+       </form>
+    </div>
+  </div>
 
 
 </html>
