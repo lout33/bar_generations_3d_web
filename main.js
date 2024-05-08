@@ -67,15 +67,18 @@ const fontFiles = [
 ];
 
 const loadedFonts = [];
+let fontsLoadedCount = 0;
 
 // Load each font file
 fontFiles.forEach((fontFile, index) => {
   loader.load(fontFile, function(font) {
     loadedFonts[index] = font;
+    fontsLoadedCount++;
 
     // Check if all fonts are loaded
-    if (loadedFonts.length === fontFiles.length) {
+    if (fontsLoadedCount === fontFiles.length) {
       // All fonts are loaded, create the bars and images
+	  init(dataJsonReversed);
 	//   animate();
     //   createBarsAndImages(dataJsonReversed);
 	//   ();
@@ -83,8 +86,6 @@ fontFiles.forEach((fontFile, index) => {
     }
   });
 });
-
-init(dataJsonReversed);
 
   
 
