@@ -3,6 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- // icon website -->
+    <link rel="icon" type="image/x-icon" href="channels4_profile.ico">
+
+
     <title>Comparation Videos</title>
     <style>
       .modal {
@@ -176,8 +180,14 @@
       </div>
 
       <div>
-        <button id="explainButton">Explain Idea</button> 
-        <button id="fullscreenButton">Full Screen</button>
+        <button id="explainButton">
+          <svg xmlns="http://www.w3.org/2000/svg" id="Isolation_Mode" data-name="Isolation Mode" viewBox="0 0 24 24" width="512" height="512"><path d="M12,24A12,12,0,1,1,24,12,12.013,12.013,0,0,1,12,24ZM12,3a9,9,0,1,0,9,9A9.01,9.01,0,0,0,12,3Z"/><path d="M10.5,14.154a4.319,4.319,0,0,1,2.155-3.821,1.364,1.364,0,1,0-2.018-1.2h-3a4.364,4.364,0,0,1,5.141-4.295A4.364,4.364,0,0,1,14.1,12.96a1.347,1.347,0,0,0-.6,1.194Z"/><rect x="10.565" y="15.994" width="3" height="3"/></svg>
+          
+        </button> 
+        <button id="fullscreenButton">
+          <svg xmlns="http://www.w3.org/2000/svg" id="Isolation_Mode" data-name="Isolation Mode" viewBox="0 0 24 24" width="512" height="512"><path d="M21,21H16v3h5.546A2.457,2.457,0,0,0,24,21.545V16H21Z"/><path d="M0,2.455V8H3V3H8V0H2.454A2.457,2.457,0,0,0,0,2.455Z"/><path d="M3,16H0v5.545A2.457,2.457,0,0,0,2.454,24H8V21H3Z"/><path d="M21.546,0H16V3h5V8h3V2.455A2.457,2.457,0,0,0,21.546,0Z"/></svg>
+          
+        </button>
   
       </div>
      
@@ -192,12 +202,16 @@
   <div id="explainModal" class="modal">
     <div class="modal-content">
       <span class="close-button" id="closeButtonContent">&times;</span>
-      <h2>Explanation of the Visualization</h2>
-      <p>Aca puedes crear videos de comparaciones, solo sube tus fotos y tu info en un csv en este formato</p>
-      <p>Our previus project was a Blender Addon, but was a litle bit complicate to use, so we decided to make a web version of it.</p>
+      <h2>How to</h2>
+      <p>Here you can create comparison videos, just upload your photos and your info in a CSV file with this format</p>
+
+      <p>Our previus project was a 
+        <a target="_blank"
+        href="https://blendermarket.com/products/generate-bars-3d-data-visualization-and-comparison-addon-for-blender-pro-version">Blender Addon </a> but was a litle bit complicate to use, so we decided to make a web version of it.</p>
       <p>
         <iframe width="560" height="315" src="https://www.youtube.com/embed/T6PhV4Hz0u4?si=i4RTbbeAKKnvjDnG" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
       </p>
+
 
       <p>Csv Example: <a href="/test1.csv" download>Download CSV Example</a></p>
       <p>Photos Example:  <a href="/Archive.zip" download>Download Photos Example</a></p> </p>
@@ -206,7 +220,7 @@
       <h3>Keyboard Shortcuts</h3>
       <li><b>A</b>: Start animation</li>
       <li><b>S</b>: Play/pause animation</li>
-      <li><b>D</b>: This Decelerate animation</li>
+      <li><b>D</b>: Decelerate animation</li>
       <li><b>F</b>: Accelerate animation</li>
       <li><b>G</b>: Start/stop recording</li>
       </ul> 
