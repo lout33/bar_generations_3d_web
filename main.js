@@ -4,6 +4,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import RecordRTC from 'recordrtc';
+import Swal from 'sweetalert2'
 
 
 import { createClient } from '@supabase/supabase-js'
@@ -19,7 +20,7 @@ const supabase = createClient(supabaseUrl, supabaseKey)
 
 import dataJson from '/src/data.json';
 let dataJsonReversed = dataJson.reverse();
-// console.log(dataJsonReversed);
+const jsonDataUser = [];
 
 let scene, camera, renderer, controls;
 
@@ -185,25 +186,24 @@ function stopAnimation() {
 
 
 
-function handleCsvUpload() {
-	const csvInput = document.getElementById('csvUpload');
-	const file = csvInput.files[0];
-	const reader = new FileReader();
+// function handleCsvUpload() {
+// 	const csvInput = document.getElementById('csvUpload');
+// 	const file = csvInput.files[0];
+// 	const reader = new FileReader();
   
-	reader.onload = function(e) {
-	  const csvData = e.target.result;
-	  processData(csvData);
-	  hasUploadedImgs = true;
-	};
+// 	reader.onload = function(e) {
+// 	  const csvData = e.target.result;
+// 	  processData(csvData);
+// 	  hasUploadedImgs = true;
+// 	};
   
-	reader.readAsText(file);
-  }
+// 	reader.readAsText(file);
+//   }
 
 
-  function processData(csvData) {
+function processData(csvData) {
 	const csvRows = csvData.split('\n');
 	const headers = csvRows[0].split(',');
-	const jsonData = [];
   
 	for (let i = 1; i < csvRows.length; i++) {
 	  const row = csvRows[i].split(',');
@@ -213,11 +213,15 @@ function handleCsvUpload() {
 		rowData[headers[j]] = row[j];
 	  }
   
-	  jsonData.push(rowData);
+	  jsonDataUser.push(rowData);
 	}
-  
-	console.log(jsonData);
-	dataJsonReversed = jsonData.reverse();
+
+}
+
+
+function applyChangesCSVandImages(){
+	console.log(jsonDataUser);
+	dataJsonReversed = jsonDataUser.reverse();
 
 	removeBarsAndImages();
 	createBarsAndImages(dataJsonReversed);
@@ -488,11 +492,36 @@ document.getElementById('imageUpload').addEventListener('change', handleImageUpl
 	// Event listener for setting the image
 // document.getElementById('setImage').addEventListener('click', updateTexture); 
 
-// document.getElementById('uploadCsv').addEventListener('click', handleCsvUpload);
+const csvUpload = document.getElementById('csvUpload');
 
 
 
+csvUpload.addEventListener('change', (event) => { 
+	// Get the selected file
+	const file = event.target.files[0];
   
+	// Check if a file was actually selected
+	 if (file) {
+	  // Perform actions with the selected file, such as:
+	  // - Read the file content
+	  // - Validate the file type
+	  // - Send the file to a server
+		const reader = new FileReader();
+	
+		reader.onload = function(e) {
+			const csvData = e.target.result;
+			processData(csvData);
+			hasUploadedImgs = true;
+		};
+	
+		reader.readAsText(file);
+	  console. log('File selected:', file.name);
+	} else {
+	  console.log('No file selected.');
+	}
+  });
+
+
 
   
 
@@ -525,9 +554,45 @@ var closeFormButton = document.getElementById("close-button-form");
 const applyChangesButton = document.getElementById('applyChanges');
 
 applyChangesButton.addEventListener('click', function() {
+	// if the user has jsonDataUser > 0 then apply the changes else display a message that say no changes were applied
+	console.log("jsonDataUser",jsonDataUser);
+	if (jsonDataUser.length > 0) {
    // Open the modal
    console.log("applyChangesButton");
    formModal.style.display = 'block';
+	} else {
+		// alert("No changes were applied");
+		Swal.fire({
+			title: 'No CSV file was uploaded!',
+			// text: 'No CSV file was uploaded',
+			icon: 'error',
+			confirmButtonText: 'Cool',
+			timer: 1500
+		  })
+
+		//   let timerInterval;
+		//   Swal.fire({
+		// 	title: "Auto close alert!",
+		// 	html: "I will close in <b></b> milliseconds.",
+		// 	timer: 2000,
+		// 	timerProgressBar: true,
+		// 	didOpen: () => {
+		// 	  Swal.showLoading();
+		// 	  const timer = Swal.getPopup().querySelector("b");
+		// 	  timerInterval = setInterval(() => {
+		// 		timer.textContent = `${Swal.getTimerLeft()}`;
+		// 	  }, 100);
+		// 	},
+		// 	willClose: () => {
+		// 	  clearInterval(timerInterval);
+		// 	}
+		//   }).then((result) => {
+		// 	/* Read more about handling dismissals below */
+		// 	if (result.dismiss === Swal.DismissReason.timer) {
+		// 	  console.log("I was closed by the timer");
+		// 	}
+		//   });
+	}
 }); 
 
 
@@ -551,13 +616,17 @@ form.addEventListener('submit', (event) => {
     .then(data => {
       console.log('Email inserted:', data);
       // Clear form or display success message
+      // Close the modal
+      
      })
     .catch(error => {
       console.error('Error inserting email:', error);
       // Display error message 
     }); 
 
-	handleCsvUpload();
+	// document.getElementById('email').value = '';
+	formModal.style.display = 'none';
+	applyChangesCSVandImages();
 }); 
 
 
@@ -589,9 +658,6 @@ function toggleFullScreen() {
 
 function createBarsAndImages(dataJsonReversed) {
 	let reverseIndex = dataJsonReversed.length;
-
-
-
 
 	// Add a vertical plane as 1
 	const backgroundGeometry = new THREE.PlaneGeometry(140, 80);
