@@ -31,6 +31,7 @@ let cameraSpeed = startCameraSpeed;
 let textureLoader = new THREE.TextureLoader();
 let canvas;
 
+let isKeydownListening = true
 let animationFrameId;
 let isRecording = false;
 let isAnimating = false; // Flag to check if animation is already running
@@ -468,23 +469,26 @@ function  handleDecelerate() {
 
 document.addEventListener('keydown',  function(event) {
 	console.log(event.key,"event.key");
-	switch (event.key) {
-	   case 'a': // Start animation on 'a' key press
-	   handleStartAnimation();
-		break;
-	  case 's': // Play/pause animation  on 'b' key press
-		handlePlayPause();
-		break;
-	  case 'd': // Decelerate animation on 'c' key press
-	  handleDecelerate();
-		break;
-	  case 'f': // Accelerate animation on 'd' key press 
-	  handleAccelerate();
-		break;
-	  case 'g': // Accelerate animation on 'f' key press (assuming duplicate for acceleration)
-	  	handleRecording();
-		break;
+	if(isKeydownListening){
+		switch (event.key) {
+			case 'a': // Start animation on 'a' key press
+			handleStartAnimation();
+			 break;
+		   case 's': // Play/pause animation  on 'b' key press
+			 handlePlayPause();
+			 break;
+		   case 'd': // Decelerate animation on 'c' key press
+		   handleDecelerate();
+			 break;
+		   case 'f': // Accelerate animation on 'd' key press 
+		   handleAccelerate();
+			 break;
+		   case 'g': // Accelerate animation on 'f' key press (assuming duplicate for acceleration)
+			   handleRecording();
+			 break;
+		 }
 	}
+	
   });
 
 
@@ -562,6 +566,12 @@ applyChangesButton.addEventListener('click', function() {
    // Open the modal
    console.log("applyChangesButton");
    formModal.style.display = 'block';
+
+   // desactivate shortcuts buttons
+   isKeydownListening = false;
+
+
+
 	} else {
 		// alert("No changes were applied");
 		Swal.fire({
@@ -601,6 +611,7 @@ applyChangesButton.addEventListener('click', function() {
 // Open the modal when the explain button is clicked
 closeFormButton.onclick = function() {
 	formModal.style.display = "none";
+	isKeydownListening = true;
 }
 
 
@@ -628,6 +639,7 @@ form.addEventListener('submit', (event) => {
 
 	// document.getElementById('email').value = '';
 	formModal.style.display = 'none';
+	isKeydownListening = true;
 	applyChangesCSVandImages();
 }); 
 

@@ -26,7 +26,7 @@
         margin: 15% auto;
         padding: 20px;
         border: 1px solid #888;
-        width: 50%;
+        width: 30%;
       }
 
       .close-button {
@@ -122,6 +122,62 @@
 
 
 </style>
+
+<style>
+  /* Modal Content */
+.modal-content {
+  background-color: #fff; /* Or a subtle background image */
+  border-radius: 8px;
+  padding: 30px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add a subtle shadow */
+ }
+
+/* Typography */
+.modal-content h3 {
+  color: #333; /* Or your desired color */
+  font-family: 'Arial', sans-serif; /* Example font family */
+  font-size: 20px;
+}
+
+.modal-content  p {
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+/* Form Elements */
+#emailForm input[type="email"] {
+  padding: 10px;
+  border: 1px solid #ccc;
+   border-radius: 4px;
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+#emailForm button {
+  background-color: #007bff; /* Example color */
+  color: #fff;
+  padding:  10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#emailForm button:hover {
+  background-color: #0056b3; /* Example hover color */
+}
+
+/* Close  Button */
+.close-button {
+  font-size: 30px;
+  color: #aaa;
+  transition: color 0.3s ease; /* Add a transition for hover effect */
+}
+
+.close-button:hover {
+  color: #000 ;
+}
+
+</style>
   <!-- <script src="https://www.webrtc-experiment.com/screenshot.js"></script> -->
   </head>
   <body>
@@ -209,7 +265,7 @@
         <a target="_blank"
         href="https://blendermarket.com/products/generate-bars-3d-data-visualization-and-comparison-addon-for-blender-pro-version">Blender Addon </a> but was a litle bit complicate to use, so we decided to make a web version of it.</p>
       <p>
-        <iframe width="560" height="315" src="https://www.youtube.com/embed/T6PhV4Hz0u4?si=i4RTbbeAKKnvjDnG" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        <iframe width="500" height="300" src="https://www.youtube.com/embed/T6PhV4Hz0u4?si=i4RTbbeAKKnvjDnG" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
       </p>
 
 
@@ -234,7 +290,7 @@
       <span class="close-button" id="close-button-form">&times;</span> 
 
       <h3>Gift us your mail before applying the changes:</h3>
-      <p>No spam, just to share if new versions are made:</p>
+      <p>No spam, just to share with you the new versions:</p>
       <form id="emailForm">
         <input type="email" id="email" placeholder="Your Email" required>
         <button type="submit">Submit</button> 
