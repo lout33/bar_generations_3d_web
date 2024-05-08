@@ -76,7 +76,6 @@ fontFiles.forEach((fontFile, index) => {
     // Check if all fonts are loaded
     if (loadedFonts.length === fontFiles.length) {
       // All fonts are loaded, create the bars and images
-	  init(dataJsonReversed);
 	//   animate();
     //   createBarsAndImages(dataJsonReversed);
 	//   ();
@@ -84,6 +83,8 @@ fontFiles.forEach((fontFile, index) => {
     }
   });
 });
+
+init(dataJsonReversed);
 
   
 
